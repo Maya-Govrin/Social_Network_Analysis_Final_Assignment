@@ -18,24 +18,26 @@ firm_quotas = {
     'Firm2': 1,
     'Firm3': 2
 }
-
+# functions 
 def stable_matching(student_prefs, firm_prefs, firm_quotas):
     # dictionaries for mappings
     students_matched = {s: None for s in student_prefs}
     firm_matches = {f: [] for f in firm_prefs}
-
     # student proposal index
     proposal_index = {s: 0 for s in student_prefs}
-
     # list of students not yet matched
     free_students = list(student_prefs.keys())
 
     #proposal loop
     while free_students:
         student = free_students.pop(0)
-
         # get the most preferred firm on the student list
         prefs = student_prefs[student]
+
+        # if student finished their list and found no match student stays unmatched
+        if proposal_index[student] >= len(prefs):
+            continue
+
         if proposal_index[student] < len(prefs):
             firm = prefs[proposal_index[student]]
             proposal_index[student] += 1
@@ -73,12 +75,6 @@ def stable_matching(student_prefs, firm_prefs, firm_quotas):
 
     return firm_matches
 
-# run gale shapely
-matches = stable_matching(student_preferences, firm_preferences, firm_quotas)
-
-print("Stable Matching")
-for firm, students in matches.items():
-    print(f"{firm}: {', '.join(students)}")
 
 def check_stability(matches, student_prefs, firm_prefs, firm_quotas):
     # map student to their matched firm
@@ -86,8 +82,13 @@ def check_stability(matches, student_prefs, firm_prefs, firm_quotas):
 
     for s, prefs in student_prefs.items():
         # get the firms each student prefers over current match
-        current_f = student_to_firm[s]
-        better_firms = prefs[:prefs.index(current_f)]
+        current_f = student_to_firm.get(s)
+
+        # ff student is unmatched, they prefer any firm on their list over 'None'
+        if current_f is None:
+            better_firms = prefs
+        else:
+            better_firms = prefs[:prefs.index(current_f)]
 
         for f in better_firms:
             f_rank = firm_prefs[f]
@@ -96,5 +97,13 @@ def check_stability(matches, student_prefs, firm_prefs, firm_quotas):
                 return False
     return True
 
+# run gale shapely
+matches = stable_matching(student_preferences, firm_preferences, firm_quotas)
+
+print("Stable Matching")
+for firm, students in matches.items():
+    print(f"{firm}: {', '.join(students)}")
+
+# check if matching is stable
 is_stable = check_stability(matches, student_preferences, firm_preferences, firm_quotas)
-print(f"Is the matching stable? {is_stable}")
+print(f"is matching stable? {is_stable}")
