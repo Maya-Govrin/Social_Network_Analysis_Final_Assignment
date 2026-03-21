@@ -54,8 +54,8 @@ def stable_matching(student_prefs, firm_prefs, firm_quotas):
             worst_student = firm_current_matches[0]
             # if new student is preferred to worst student in the current matches, a switch is made
             if firm_ranks[student] < firm_ranks[worst_student]:
-                firm_matches[firm].remove(worst_student)
-                firm_matches[firm].append(student)
+                firms_matches_to_students[firm].remove(worst_student)
+                firms_matches_to_students[firm].append(student)
                 students_matches_to_firms[worst_student] = None
                 students_matches_to_firms[student] = firm
                 # worst student is now free to propose to new firms
