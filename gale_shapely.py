@@ -1,6 +1,6 @@
 # functions to implement Gale Shapely Stable Marriage Algorithm for the case of Law firms and students who are candidates for law internships
 # implementation allows for unequal set sizes (num of positions != num of candidates), ties in preference lists and incomplete preference lists. each firm may offer several positions
-# functions to check for stability are included (storng stability and super stability are relevant for the case of ties)
+# functions to check for stability are included (strong stability and super stability are relevant for the case of ties)
 
 ### functions ###
 def stable_matching(student_prefs, firm_prefs, firm_quotas):
